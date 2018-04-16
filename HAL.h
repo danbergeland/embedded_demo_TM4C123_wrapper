@@ -18,5 +18,6 @@ void set_fan(int);
 void set_pump(int);
 void set_light(int);
 
+void set_led(int);
 
 #endif /* HAL_H_ */

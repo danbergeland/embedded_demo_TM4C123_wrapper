@@ -31,6 +31,13 @@ void init_HAL(void){
     //FAN output pin PA2
     GPIOPinTypeGPIOOutput(GPIO_PORTA_BASE, GPIO_PIN_2);
 
+    //LED pins
+    //Red
+    GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_1);
+    //Blue
+    GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_2);
+    //Green
+    GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_3);
 
 }
 
@@ -52,4 +59,21 @@ void set_pump(int enable){
 
 void set_light(int enable){
     GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_4, (uint8_t)enable);
+}
+
+void set_led(int bit_code){
+    ///bits: Red is LSB, Blue is <<1, Green is <<2
+    if(bit_code>7){
+        bit_code = 7;
+    }
+    if(bit_code < 0){
+        bit_code = 0;
+    }
+    int red = bit_code & 1;
+    int blue = bit_code & 2;
+    int green = bit_code & 4;
+
+    GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, red);
+    GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, blue);
+    GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_3, green);
 }

@@ -15,14 +15,23 @@
 #include "inc/hw_ints.h"
 
 #include "embedded_demo/hydro.h"
+#include <HAL.h>
 
 hydro_state global_hydro_state;
+int led_code;
 
 //Configure the timer to call back every 1 second
 //Faster base rate on the timer will change execution speed
 void handle_second_tick(void){
     //Reset the interrupt flag so it can be called again
     TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
+
+    //Change the LED color, just for fun
+    led_code += 1;
+    if(led_code>7){
+        led_code = 1;
+    }
+    set_led(led_code);
 
     //Increment the second counter on the state struct
     global_hydro_state.timer_seconds += 1;
@@ -40,6 +49,8 @@ void handle_second_tick(void){
 void init_task_runner(void){
 
     global_hydro_state = init_hydro();
+    led_code = 1;
+    set_led(led_code);
 
     //Enable the timer peripheral
     SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
