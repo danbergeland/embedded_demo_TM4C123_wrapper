@@ -19,6 +19,10 @@
 
 void init_HAL(void){
 
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
+
     //Low_water_sense input PF0
     GPIOPinTypeGPIOInput(GPIO_PORTF_BASE, GPIO_PIN_0);
     //High_water_sense input PE0
@@ -69,9 +73,10 @@ void set_led(int bit_code){
     if(bit_code < 0){
         bit_code = 0;
     }
-    int red = bit_code & 1;
-    int blue = bit_code & 2;
-    int green = bit_code & 4;
+    bit_code = bit_code<<1;
+    int red = bit_code & GPIO_PIN_1;
+    int blue = bit_code & GPIO_PIN_2;
+    int green = bit_code & GPIO_PIN_3;
 
     GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, red);
     GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, blue);

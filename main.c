@@ -15,6 +15,7 @@
 int main(void)
 {
     init_HAL();
+    set_led(3);
     init_task_runner();
     while(1){}
 }
