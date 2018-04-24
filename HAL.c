@@ -20,11 +20,16 @@
 void init_HAL(void){
 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
 
-    //Low_water_sense input PF0
-    GPIOPinTypeGPIOInput(GPIO_PORTF_BASE, GPIO_PIN_0);
+    //Set pull down resistors for PB2 and PE0.
+    GPIOPadConfigSet(GPIO_PORTB_BASE, GPIO_PIN_2, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPD);
+    GPIOPadConfigSet(GPIO_PORTE_BASE, GPIO_PIN_0, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPD);
+
+    //Low_water_sense input PB2
+    GPIOPinTypeGPIOInput(GPIO_PORTB_BASE, GPIO_PIN_2);
     //High_water_sense input PE0
     GPIOPinTypeGPIOInput(GPIO_PORTE_BASE, GPIO_PIN_0);
 
@@ -46,23 +51,45 @@ void init_HAL(void){
 }
 
 int get_high_water_sense(void){
-    return (int)GPIOPinRead(GPIO_PORTE_BASE, GPIO_PIN_0);
+    return (int)(GPIOPinRead(GPIO_PORTE_BASE, GPIO_PIN_0) == 0);
 }
 
 int get_low_water_sense(void){
-    return (int)GPIOPinRead(GPIO_PORTF_BASE, GPIO_PIN_0);
+    return (int)(GPIOPinRead(GPIO_PORTB_BASE, GPIO_PIN_2) == 0);
 }
 
 void set_fan(int enable){
-    GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_2, (uint8_t)enable);
-}
+    if(enable!=0)
+    {
+        GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_2, GPIO_PIN_2);
+    }
+    else
+    {
+        GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_2, 0);
+    }
+   }
 
 void set_pump(int enable){
-    GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_3, (uint8_t)enable);
+    if(enable!=0)
+    {
+        GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_3, GPIO_PIN_3);
+    }
+    else
+    {
+        GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_3, 0);
+    }
 }
 
 void set_light(int enable){
-    GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_4, (uint8_t)enable);
+    if(enable!=0)
+    {
+        GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_4, GPIO_PIN_4);
+    }
+    else
+    {
+        GPIOPinWrite(GPIO_PORTA_BASE, GPIO_PIN_4, 0);
+    }
+
 }
 
 void set_led(int bit_code){
